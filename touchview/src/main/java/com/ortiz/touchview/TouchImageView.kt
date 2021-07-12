@@ -109,8 +109,8 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
         }
         minScale = 1f
         maxScale = 3f
-        superMinScale = SUPER_MIN_MULTIPLIER * minScale
-        superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
+        superMinScale = super_min_multiplier * minScale
+        superMaxScale = super_max_multiplier * maxScale
         imageMatrix = touchMatrix
         scaleType = ScaleType.MATRIX
         setState(ImageActionState.NONE)
@@ -298,7 +298,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
         get() = maxScale
         set(max) {
             maxScale = max
-            superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
+            superMaxScale = super_max_multiplier * maxScale
             maxScaleIsSetByMultiplier = false
         }
 
@@ -311,7 +311,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     fun setMaxZoomRatio(max: Float) {
         maxScaleMultiplier = max
         maxScale = minScale * maxScaleMultiplier
-        superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
+        superMaxScale = super_max_multiplier * maxScale
         maxScaleIsSetByMultiplier = true
     }
 
@@ -346,7 +346,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
             if (maxScaleIsSetByMultiplier) {
                 setMaxZoomRatio(maxScaleMultiplier)
             }
-            superMinScale = SUPER_MIN_MULTIPLIER * minScale
+            superMinScale = super_min_multiplier * minScale
         }
 
     // Reset zoom and translation to initial state.
