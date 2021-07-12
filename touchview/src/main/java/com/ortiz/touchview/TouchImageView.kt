@@ -45,6 +45,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     private var touchMatrix: Matrix
     private var prevMatrix: Matrix
     var isZoomEnabled = false
+    var isDoubleTapZoomEnabled = false
     private var isRotateImageToFitScreen = false
 
     var orientationChangeFixedPixel: FixedPixel? = FixedPixel.CENTER
@@ -60,6 +61,8 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     private var superMinScale = 0f
     private var superMaxScale = 0f
     private var floatMatrix: FloatArray
+    var super_min_multiplier = .75f
+    var super_max_multiplier = 1.25f
 
     /**
      * Set custom zoom multiplier for double tap.
@@ -117,6 +120,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
         try {
             if (!isInEditMode) {
                 isZoomEnabled = attributes.getBoolean(R.styleable.TouchImageView_zoom_enabled, true)
+                isDoubleTapZoomEnabled = isZoomEnabled
             }
         } finally {
             // release the TypedArray so that it can be reused.
@@ -814,7 +818,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
             var consumed = false
-            if (e != null && isZoomEnabled) {
+            if (e != null && isDoubleTapZoomEnabled) {
                 doubleTapListener?.let {
                     consumed = it.onDoubleTap(e)
                 }
@@ -847,7 +851,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
                 setState(ImageActionState.NONE)
                 return false
             }
-            if (isZoomEnabled) {
+            if (isZoomEnabled || isDoubleTapZoomEnabled) {
                 scaleDetector.onTouchEvent(event)
             }
             gestureDetector.onTouchEvent(event)
@@ -1281,11 +1285,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     companion object {
-        // SuperMin and SuperMax multipliers. Determine how much the image can be zoomed below or above the zoom boundaries,
-        // before animating back to the min/max zoom boundary.
-        private const val SUPER_MIN_MULTIPLIER = .75f
-        private const val SUPER_MAX_MULTIPLIER = 1.25f
-        private const val DEFAULT_ZOOM_TIME = 500
+        private val DEFAULT_ZOOM_TIME = 500
 
         // If setMinZoom(AUTOMATIC_MIN_ZOOM), then we'll set the min scale to include the whole image.
         const val AUTOMATIC_MIN_ZOOM = -1.0f
