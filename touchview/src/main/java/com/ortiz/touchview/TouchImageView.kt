@@ -61,8 +61,6 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     private var superMinScale = 0f
     private var superMaxScale = 0f
     private var floatMatrix: FloatArray
-    var super_min_multiplier = .75f
-    var super_max_multiplier = 1.25f
 
     /**
      * Set custom zoom multiplier for double tap.
@@ -109,8 +107,8 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
         }
         minScale = 1f
         maxScale = 3f
-        superMinScale = super_min_multiplier * minScale
-        superMaxScale = super_max_multiplier * maxScale
+        superMinScale = SUPER_MIN_MULTIPLIER * minScale
+        superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
         imageMatrix = touchMatrix
         scaleType = ScaleType.MATRIX
         setState(ImageActionState.NONE)
@@ -298,7 +296,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
         get() = maxScale
         set(max) {
             maxScale = max
-            superMaxScale = super_max_multiplier * maxScale
+            superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
             maxScaleIsSetByMultiplier = false
         }
 
@@ -311,7 +309,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     fun setMaxZoomRatio(max: Float) {
         maxScaleMultiplier = max
         maxScale = minScale * maxScaleMultiplier
-        superMaxScale = super_max_multiplier * maxScale
+        superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
         maxScaleIsSetByMultiplier = true
     }
 
@@ -346,7 +344,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
             if (maxScaleIsSetByMultiplier) {
                 setMaxZoomRatio(maxScaleMultiplier)
             }
-            superMinScale = super_min_multiplier * minScale
+            superMinScale = SUPER_MIN_MULTIPLIER * minScale
         }
 
     // Reset zoom and translation to initial state.
@@ -1285,7 +1283,11 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     companion object {
-        private val DEFAULT_ZOOM_TIME = 500
+        // SuperMin and SuperMax multipliers. Determine how much the image can be zoomed below or above the zoom boundaries,
+        // before animating back to the min/max zoom boundary.
+        var SUPER_MIN_MULTIPLIER = 0.75f
+        var SUPER_MAX_MULTIPLIER = 1.25f
+        const val DEFAULT_ZOOM_TIME = 500
 
         // If setMinZoom(AUTOMATIC_MIN_ZOOM), then we'll set the min scale to include the whole image.
         const val AUTOMATIC_MIN_ZOOM = -1.0f
