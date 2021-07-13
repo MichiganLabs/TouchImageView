@@ -62,6 +62,18 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     private var superMaxScale = 0f
     private var floatMatrix: FloatArray
 
+    var superMinMultiplier = 0.75f
+        set(multiplier) {
+            superMinMultiplier = multiplier
+            superMinScale = superMinMultiplier * minScale
+        }
+
+    var superMaxMultiplier = 1.25f
+        set(multiplier) {
+            superMaxMultiplier = multiplier
+            superMaxScale = superMaxMultiplier * maxScale
+        }
+
     /**
      * Set custom zoom multiplier for double tap.
      * By default maxScale will be used as value for double tap zoom multiplier.
@@ -107,8 +119,8 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
         }
         minScale = 1f
         maxScale = 3f
-        superMinScale = SUPER_MIN_MULTIPLIER * minScale
-        superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
+        superMinScale = superMinMultiplier * minScale
+        superMaxScale = superMaxMultiplier * maxScale
         imageMatrix = touchMatrix
         scaleType = ScaleType.MATRIX
         setState(ImageActionState.NONE)
@@ -296,7 +308,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
         get() = maxScale
         set(max) {
             maxScale = max
-            superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
+            superMaxScale = superMaxMultiplier * maxScale
             maxScaleIsSetByMultiplier = false
         }
 
@@ -309,7 +321,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     fun setMaxZoomRatio(max: Float) {
         maxScaleMultiplier = max
         maxScale = minScale * maxScaleMultiplier
-        superMaxScale = SUPER_MAX_MULTIPLIER * maxScale
+        superMaxScale = superMaxMultiplier * maxScale
         maxScaleIsSetByMultiplier = true
     }
 
@@ -344,7 +356,7 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
             if (maxScaleIsSetByMultiplier) {
                 setMaxZoomRatio(maxScaleMultiplier)
             }
-            superMinScale = SUPER_MIN_MULTIPLIER * minScale
+            superMinScale = superMinMultiplier * minScale
         }
 
     // Reset zoom and translation to initial state.
@@ -1283,10 +1295,6 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     companion object {
-        // SuperMin and SuperMax multipliers. Determine how much the image can be zoomed below or above the zoom boundaries,
-        // before animating back to the min/max zoom boundary.
-        const val SUPER_MIN_MULTIPLIER = 1f
-        const val SUPER_MAX_MULTIPLIER = 1f
         const val DEFAULT_ZOOM_TIME = 500
 
         // If setMinZoom(AUTOMATIC_MIN_ZOOM), then we'll set the min scale to include the whole image.
