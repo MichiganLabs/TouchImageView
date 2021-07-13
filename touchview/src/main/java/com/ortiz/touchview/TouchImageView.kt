@@ -1285,8 +1285,8 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
     companion object {
         // SuperMin and SuperMax multipliers. Determine how much the image can be zoomed below or above the zoom boundaries,
         // before animating back to the min/max zoom boundary.
-        var SUPER_MIN_MULTIPLIER = 0.75f
-        var SUPER_MAX_MULTIPLIER = 1.25f
+        const val SUPER_MIN_MULTIPLIER = 1f
+        const val SUPER_MAX_MULTIPLIER = 1f
         const val DEFAULT_ZOOM_TIME = 500
 
         // If setMinZoom(AUTOMATIC_MIN_ZOOM), then we'll set the min scale to include the whole image.
