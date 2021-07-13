@@ -64,14 +64,14 @@ open class TouchImageView @JvmOverloads constructor(context: Context, attrs: Att
 
     var superMinMultiplier = 0.75f
         set(multiplier) {
-            superMinMultiplier = multiplier
-            superMinScale = superMinMultiplier * minScale
+            field = multiplier
+            superMinScale = multiplier * minScale
         }
 
     var superMaxMultiplier = 1.25f
         set(multiplier) {
-            superMaxMultiplier = multiplier
-            superMaxScale = superMaxMultiplier * maxScale
+            field = multiplier
+            superMaxScale = multiplier * maxScale
         }
 
     /**
